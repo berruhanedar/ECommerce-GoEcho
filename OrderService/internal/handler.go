@@ -86,6 +86,18 @@ func (h *Handler) Create(c echo.Context) error {
 	return c.JSON(http.StatusCreated, createdOrder)
 }
 
+// GetByID godoc
+// @Summary Get order by ID
+// @Description Retrieve an order with customer details by its unique ID
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param id path string true "Order ID (UUID)"
+// @Success 200 {object} types.OrderWithCustomerResponse "Order details with customer info"
+// @Failure 400 {object} customError.AppError "Invalid ID format"
+// @Failure 404 {object} customError.AppError "Order not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
+// @Router /orders/{id} [get]
 func (h *Handler) GetByID(c echo.Context) error {
 	correlationID, _ := c.Get("CorrelationID").(string)
 	id := c.Param("id")
@@ -106,19 +118,6 @@ func (h *Handler) GetByID(c echo.Context) error {
 	customError.LogInfoWithCorrelation("Order with customer fetched", correlationID)
 	return c.JSON(http.StatusOK, orderWithCustomer)
 }
-
-// GetByID godoc
-// @Summary Get order by ID
-// @Description Retrieve an order with customer details by its unique ID
-// @Tags orders
-// @Accept json
-// @Produce json
-// @Param id path string true "Order ID (UUID)"
-// @Success 200 {object} types.OrderWithCustomerResponse "Order details with customer info"
-// @Failure 400 {object} customError.AppError "Invalid ID format"
-// @Failure 404 {object} customError.AppError "Order not found"
-// @Failure 500 {object} customError.AppError "Internal server error"
-// @Router /orders/{id} [get]
 
 // ShipOrder godoc
 // @Summary Ship an order
