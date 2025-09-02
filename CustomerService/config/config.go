@@ -1,11 +1,15 @@
 package config
 
+import "fmt"
+
+type DbConfig struct {
+	DBName  string
+	ColName string
+}
+
 type CustomerConfig struct {
 	Port     string
-	DbConfig struct {
-		DBName  string
-		ColName string
-	}
+	DbConfig DbConfig
 }
 
 var RoleStatus = struct {
@@ -37,43 +41,24 @@ var RoleStatus = struct {
 	},
 }
 
-var cfgs = map[string]CustomerConfig{
-	"prod": {
-		Port: ":8001",
-		DbConfig: struct {
-			DBName  string
-			ColName string
-		}{
-			DBName:  "tesodev",
-			ColName: "customer",
-		},
-	},
-	"qa": {
-		Port: ":8001",
-		DbConfig: struct {
-			DBName  string
-			ColName string
-		}{
-			DBName:  "tesodev",
-			ColName: "customer",
-		},
-	},
-	"dev": {
-		Port: ":8001",
-		DbConfig: struct {
-			DBName  string
-			ColName string
-		}{
-			DBName:  "tesodev",
-			ColName: "customer",
-		},
+var commonConfig = CustomerConfig{
+	Port: ":8001",
+	DbConfig: DbConfig{
+		DBName:  "tesodev",
+		ColName: "customer",
 	},
 }
 
+var cfgs = map[string]CustomerConfig{
+	"prod": commonConfig,
+	"qa":   commonConfig,
+	"dev":  commonConfig,
+}
+
 func GetCustomerConfig(env string) *CustomerConfig {
-	config, isExist := cfgs[env]
-	if !isExist {
-		panic("config does not exist")
+	config, exists := cfgs[env]
+	if !exists {
+		panic(fmt.Sprintf("config for env %s does not exist", env))
 	}
 	return &config
 }
