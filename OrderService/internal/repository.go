@@ -46,6 +46,22 @@ func (r *Repository) GetByID(ctx context.Context, id string) (*types.Order, erro
 	return &order, nil
 }
 
+func (r *Repository) GetAllOrders(ctx context.Context, findOptions *options.FindOptions) ([]types.Order, error) {
+	var orders []types.Order
+
+	cursor, err := r.collection.Find(ctx, bson.M{}, findOptions)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, &orders); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
+
 func (r *Repository) UpdateStatusByID(ctx context.Context, id string, status string) error {
 	filter := bson.M{"_id": id}
 	update := bson.M{
@@ -111,22 +127,6 @@ func (r *Repository) SoftDeleteByID(ctx context.Context, id string) error {
 	}
 
 	return nil
-}
-
-func (r *Repository) GetAllOrders(ctx context.Context, findOptions *options.FindOptions) ([]types.Order, error) {
-	var orders []types.Order
-
-	cursor, err := r.collection.Find(ctx, bson.M{}, findOptions)
-	if err != nil {
-		return nil, err
-	}
-	defer cursor.Close(ctx)
-
-	if err := cursor.All(ctx, &orders); err != nil {
-		return nil, err
-	}
-
-	return orders, nil
 }
 
 func (r *Repository) FindPriceWithMatchingDiscount(ctx context.Context, orderID string, role string) (*types.OrderPriceInfo, error) {

@@ -164,6 +164,17 @@ definitions:
       value:
         type: number
     type: object
+  types.FinalPriceResult:
+    properties:
+      discount_applied:
+        type: number
+      discount_type:
+        type: string
+      final_price:
+        type: number
+      original_price:
+        type: number
+    type: object
   types.LoginRequestModel:
     properties:
       email:
@@ -618,6 +629,74 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Deliver an order
+      tags:
+      - orders
+  /order/{id}/non-premium-price:
+    get:
+      consumes:
+      - application/json
+      description: Calculates and returns the final price for a non-premium order
+        by order ID
+      parameters:
+      - description: Order ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Final price details for non-premium order
+          schema:
+            $ref: '#/definitions/types.FinalPriceResult'
+        "400":
+          description: Invalid or empty order ID
+          schema:
+            $ref: '#/definitions/customError.AppError'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/customError.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/customError.AppError'
+      summary: Get non-premium order final price
+      tags:
+      - orders
+  /order/{id}/premium-price:
+    get:
+      consumes:
+      - application/json
+      description: Calculates and returns the final price for a premium order by order
+        ID
+      parameters:
+      - description: Order ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Final price details for premium order
+          schema:
+            $ref: '#/definitions/types.FinalPriceResult'
+        "400":
+          description: Invalid or empty order ID
+          schema:
+            $ref: '#/definitions/customError.AppError'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/customError.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/customError.AppError'
+      summary: Get premium order final price
       tags:
       - orders
   /orders:

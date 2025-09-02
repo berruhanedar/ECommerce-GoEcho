@@ -501,6 +501,106 @@ const docTemplate = `{
                 }
             }
         },
+        "/order/{id}/non-premium-price": {
+            "get": {
+                "description": "Calculates and returns the final price for a non-premium order by order ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get non-premium order final price",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Final price details for non-premium order",
+                        "schema": {
+                            "$ref": "#/definitions/types.FinalPriceResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid or empty order ID",
+                        "schema": {
+                            "$ref": "#/definitions/customError.AppError"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "$ref": "#/definitions/customError.AppError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/customError.AppError"
+                        }
+                    }
+                }
+            }
+        },
+        "/order/{id}/premium-price": {
+            "get": {
+                "description": "Calculates and returns the final price for a premium order by order ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get premium order final price",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Final price details for premium order",
+                        "schema": {
+                            "$ref": "#/definitions/types.FinalPriceResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid or empty order ID",
+                        "schema": {
+                            "$ref": "#/definitions/customError.AppError"
+                        }
+                    },
+                    "404": {
+                        "description": "Order not found",
+                        "schema": {
+                            "$ref": "#/definitions/customError.AppError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/customError.AppError"
+                        }
+                    }
+                }
+            }
+        },
         "/orders": {
             "get": {
                 "description": "Retrieve a paginated list of all orders.",
@@ -1036,6 +1136,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "value": {
+                    "type": "number"
+                }
+            }
+        },
+        "types.FinalPriceResult": {
+            "type": "object",
+            "properties": {
+                "discount_applied": {
+                    "type": "number"
+                },
+                "discount_type": {
+                    "type": "string"
+                },
+                "final_price": {
+                    "type": "number"
+                },
+                "original_price": {
                     "type": "number"
                 }
             }

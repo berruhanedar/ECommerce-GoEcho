@@ -4,14 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"tesodev-korpes/OrderService/config"
 	"tesodev-korpes/OrderService/internal/types"
 	"tesodev-korpes/pkg/client"
 	"tesodev-korpes/pkg/customError"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Service struct {
@@ -58,6 +57,30 @@ func (s *Service) GetByID(ctx context.Context, id string, token string) (*types.
 		OrderResponseModel: *ToOrderResponse(order),
 		Customer:           *customer,
 	}, nil
+}
+
+func (s *Service) GetAllOrders(ctx context.Context, pagination types.Pagination) ([]*types.OrderResponseModel, error) {
+	skip := (pagination.Page - 1) * pagination.Limit
+
+	findOptions := options.Find().
+		SetSkip(int64(skip)).
+		SetLimit(int64(pagination.Limit)).
+		SetSort(bson.D{{Key: "created_at", Value: -1}})
+
+	orders, err := s.repo.GetAllOrders(ctx, findOptions)
+	if err != nil {
+		return nil, err
+	}
+
+	var response []*types.OrderResponseModel
+	for _, order := range orders {
+		resp := ToOrderResponse(&order)
+		if resp != nil {
+			response = append(response, resp)
+		}
+	}
+
+	return response, nil
 }
 
 func (s *Service) ShipOrder(ctx context.Context, id string) error {
@@ -110,28 +133,27 @@ func (s *Service) DeleteOrder(ctx context.Context, id string) error {
 	return s.repo.SoftDeleteByID(ctx, id)
 }
 
-func (s *Service) GetAllOrders(ctx context.Context, pagination types.Pagination) ([]*types.OrderResponseModel, error) {
-	skip := (pagination.Page - 1) * pagination.Limit
-
-	findOptions := options.Find().
-		SetSkip(int64(skip)).
-		SetLimit(int64(pagination.Limit)).
-		SetSort(bson.D{{Key: "created_at", Value: -1}})
-
-	orders, err := s.repo.GetAllOrders(ctx, findOptions)
+func (s *Service) CalculatePremiumFinalPrice(ctx context.Context, orderID string) (*types.FinalPriceResult, error) {
+	repoResult, err := s.repo.FindPriceWithMatchingDiscount(ctx, orderID, "premium")
 	if err != nil {
 		return nil, err
 	}
 
-	var response []*types.OrderResponseModel
-	for _, order := range orders {
-		resp := ToOrderResponse(&order)
-		if resp != nil {
-			response = append(response, resp)
-		}
+	result := s.calculatePriceFromRepoResult(repoResult)
+
+	return result, nil
+}
+
+func (s *Service) CalculateNonPremiumFinalPrice(ctx context.Context, orderID string) (*types.FinalPriceResult, error) {
+	repoResult, err := s.repo.FindPriceWithMatchingDiscount(ctx, orderID, "non-premium")
+	if err != nil {
+		return nil, err
 	}
 
-	return response, nil
+	fmt.Println(repoResult.Discount)
+	result := s.calculatePriceFromRepoResult(repoResult)
+
+	return result, nil
 }
 
 func (s *Service) fetchCustomerByID(customerID, token string) (*types.CustomerResponseModel, error) {
@@ -192,27 +214,4 @@ func (s *Service) calculatePriceFromRepoResult(repoResult *types.OrderPriceInfo)
 		FinalPrice:      finalPrice,
 		DiscountType:    discountType,
 	}
-}
-
-func (s *Service) CalculatePremiumFinalPrice(ctx context.Context, orderID string) (*types.FinalPriceResult, error) {
-	repoResult, err := s.repo.FindPriceWithMatchingDiscount(ctx, orderID, "premium")
-	if err != nil {
-		return nil, err
-	}
-
-	result := s.calculatePriceFromRepoResult(repoResult)
-
-	return result, nil
-}
-
-func (s *Service) CalculateNonPremiumFinalPrice(ctx context.Context, orderID string) (*types.FinalPriceResult, error) {
-	repoResult, err := s.repo.FindPriceWithMatchingDiscount(ctx, orderID, "non-premium")
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Println(repoResult.Discount)
-	result := s.calculatePriceFromRepoResult(repoResult)
-
-	return result, nil
 }

@@ -37,10 +37,13 @@ func NewHandler(e *echo.Echo, service *Service, clientMongo *mongo.Client) *Hand
 	g := e.Group("/order")
 	g.POST("", handler.Create)
 	g.GET("/:id", handler.GetByID)
+	g.GET("/list", handler.GetAllOrders)
 	g.PATCH("/:id/ship", handler.ShipOrder)
 	g.PATCH("/:id/deliver", handler.DeliverOrder)
 	g.DELETE("/cancel/:id", handler.CancelOrder)
-	g.GET("/list", handler.GetAllOrders)
+	g.DELETE("/:id", handler.DeleteOrder)
+	g.GET("/:id/premium-price", handler.GetPremiumOrderPrice)
+	g.GET("/:id/non-premium-price", handler.GetNonPremiumOrderPrice)
 
 	return handler
 }
@@ -117,6 +120,47 @@ func (h *Handler) GetByID(c echo.Context) error {
 
 	customError.LogInfoWithCorrelation("Order with customer fetched", correlationID)
 	return c.JSON(http.StatusOK, orderWithCustomer)
+}
+
+// GetAllOrders godoc
+// @Summary List all orders with pagination
+// @Description Retrieve a paginated list of all orders.
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number" default(1)
+// @Param limit query int false "Number of items per page" default(10)
+// @Success 200 {object} map[string]interface{} "Returns list of orders with pagination"
+// @Failure 404 {object} customError.AppError "No orders found"
+// @Failure 500 {object} customError.AppError "Internal server error"
+// @Router /orders [get]
+func (h *Handler) GetAllOrders(c echo.Context) error {
+	params := types.Pagination{
+		Page:  1,
+		Limit: 10,
+	}
+
+	if p := c.QueryParam("page"); p != "" {
+		if pageInt, err := strconv.Atoi(p); err == nil && pageInt > 0 {
+			params.Page = pageInt
+		}
+	}
+
+	if l := c.QueryParam("limit"); l != "" {
+		if limitInt, err := strconv.Atoi(l); err == nil && limitInt > 0 {
+			params.Limit = limitInt
+		}
+	}
+
+	orders, err := h.service.GetAllOrders(c.Request().Context(), params)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return customError.NewNotFound(customError.OrderNotFound)
+		}
+		return customError.NewInternal(customError.OrderServiceError, err)
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{"data": orders})
 }
 
 // ShipOrder godoc
@@ -274,47 +318,18 @@ func (h *Handler) DeleteOrder(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{"message": "Order deleted (soft delete) successfully."})
 }
 
-// GetAllOrders godoc
-// @Summary List all orders with pagination
-// @Description Retrieve a paginated list of all orders.
+// GetPremiumOrderPrice godoc
+// @Summary Get premium order final price
+// @Description Calculates and returns the final price for a premium order by order ID
 // @Tags orders
 // @Accept json
 // @Produce json
-// @Param page query int false "Page number" default(1)
-// @Param limit query int false "Number of items per page" default(10)
-// @Success 200 {object} map[string]interface{} "Returns list of orders with pagination"
-// @Failure 404 {object} customError.AppError "No orders found"
+// @Param id path string true "Order ID (UUID)"
+// @Success 200 {object} types.FinalPriceResult "Final price details for premium order"
+// @Failure 400 {object} customError.AppError "Invalid or empty order ID"
+// @Failure 404 {object} customError.AppError "Order not found"
 // @Failure 500 {object} customError.AppError "Internal server error"
-// @Router /orders [get]
-func (h *Handler) GetAllOrders(c echo.Context) error {
-	params := types.Pagination{
-		Page:  1,
-		Limit: 10,
-	}
-
-	if p := c.QueryParam("page"); p != "" {
-		if pageInt, err := strconv.Atoi(p); err == nil && pageInt > 0 {
-			params.Page = pageInt
-		}
-	}
-
-	if l := c.QueryParam("limit"); l != "" {
-		if limitInt, err := strconv.Atoi(l); err == nil && limitInt > 0 {
-			params.Limit = limitInt
-		}
-	}
-
-	orders, err := h.service.GetAllOrders(c.Request().Context(), params)
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return customError.NewNotFound(customError.OrderNotFound)
-		}
-		return customError.NewInternal(customError.OrderServiceError, err)
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{"data": orders})
-}
-
+// @Router /order/{id}/premium-price [get]
 func (h *Handler) GetPremiumOrderPrice(c echo.Context) error {
 	orderID := c.Param("id")
 	if orderID == "" {
@@ -340,6 +355,18 @@ func (h *Handler) GetPremiumOrderPrice(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+// GetNonPremiumOrderPrice godoc
+// @Summary Get non-premium order final price
+// @Description Calculates and returns the final price for a non-premium order by order ID
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Param id path string true "Order ID (UUID)"
+// @Success 200 {object} types.FinalPriceResult "Final price details for non-premium order"
+// @Failure 400 {object} customError.AppError "Invalid or empty order ID"
+// @Failure 404 {object} customError.AppError "Order not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
+// @Router /order/{id}/non-premium-price [get]
 func (h *Handler) GetNonPremiumOrderPrice(c echo.Context) error {
 	orderID := c.Param("id")
 
