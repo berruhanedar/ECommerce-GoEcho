@@ -53,10 +53,7 @@ func (s *Service) GetByID(ctx context.Context, id string, token string) (*types.
 		return nil, err
 	}
 
-	return &types.OrderWithCustomerResponse{
-		OrderResponseModel: *ToOrderResponse(order),
-		Customer:           *customer,
-	}, nil
+	return ToOrderWithCustomerResponse(ToOrderResponse(order), customer), nil
 }
 
 func (s *Service) GetAllOrders(ctx context.Context, pagination types.Pagination) ([]*types.OrderResponseModel, error) {
