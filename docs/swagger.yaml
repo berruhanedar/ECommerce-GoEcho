@@ -1,0 +1,775 @@
+definitions:
+  errorPackage.AppError:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+    type: object
+  tesodev-korpes_CustomerService_internal_types.Address:
+    properties:
+      city:
+        type: string
+      id:
+        type: string
+      state:
+        type: string
+      zipCode:
+        type: string
+    type: object
+  tesodev-korpes_CustomerService_internal_types.CustomerResponseModel:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.Address'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      last_name:
+        type: string
+      phone:
+        items:
+          $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.Phone'
+        type: array
+      role:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  tesodev-korpes_CustomerService_internal_types.Phone:
+    properties:
+      id:
+        type: string
+      phoneNumber:
+        type: integer
+    type: object
+  tesodev-korpes_OrderService_internal_types.Address:
+    properties:
+      city:
+        type: string
+      id:
+        type: string
+      state:
+        type: string
+      zipCode:
+        type: string
+    type: object
+  tesodev-korpes_OrderService_internal_types.CustomerResponseModel:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Address'
+        type: array
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone:
+        items:
+          $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Phone'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  tesodev-korpes_OrderService_internal_types.Phone:
+    properties:
+      id:
+        type: string
+      phoneNumber:
+        type: integer
+    type: object
+  types.CreateCustomerRequestModel:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.Address'
+        type: array
+      email:
+        type: string
+      first_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      last_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      password:
+        type: string
+      phone:
+        items:
+          $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.Phone'
+        type: array
+    required:
+    - address
+    - email
+    - first_name
+    - last_name
+    - password
+    - phone
+    type: object
+  types.CreateOrderRequestModel:
+    properties:
+      billing_address:
+        $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Address'
+      customer_id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/types.OrderItem'
+        type: array
+      shipping_address:
+        $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Address'
+    required:
+    - billing_address
+    - customer_id
+    - items
+    - shipping_address
+    type: object
+  types.LoginRequestModel:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  types.LoginResponse:
+    properties:
+      message:
+        type: string
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.CustomerResponseModel'
+    type: object
+  types.OrderItem:
+    properties:
+      productId:
+        type: string
+      productName:
+        type: string
+      quantity:
+        type: integer
+      unitPrice:
+        type: number
+    type: object
+  types.OrderResponseModel:
+    properties:
+      billing_address:
+        $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Address'
+      created_at:
+        type: string
+      customer_id:
+        type: string
+      id:
+        type: string
+      is_delete:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/types.OrderItem'
+        type: array
+      shipping_address:
+        $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Address'
+      status:
+        type: string
+      total_price:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  types.OrderWithCustomerResponse:
+    properties:
+      billing_address:
+        $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Address'
+      created_at:
+        type: string
+      customer:
+        $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.CustomerResponseModel'
+      customer_id:
+        type: string
+      id:
+        type: string
+      is_delete:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/types.OrderItem'
+        type: array
+      shipping_address:
+        $ref: '#/definitions/tesodev-korpes_OrderService_internal_types.Address'
+      status:
+        type: string
+      total_price:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  types.UpdateCustomerRequestModel:
+    properties:
+      address:
+        items:
+          $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.Address'
+        type: array
+      email:
+        type: string
+      first_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      is_active:
+        type: boolean
+      last_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      password:
+        type: string
+      phone:
+        items:
+          $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.Phone'
+        type: array
+    required:
+    - email
+    type: object
+  types.VerifiedUser:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+    type: object
+  types.VerifyTokenResponse:
+    properties:
+      message:
+        type: string
+      user:
+        $ref: '#/definitions/types.VerifiedUser'
+    type: object
+info:
+  contact: {}
+paths:
+  /customer/:
+    post:
+      consumes:
+      - application/json
+      description: Create a new customer with the given data
+      parameters:
+      - description: Customer to create
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/types.CreateCustomerRequestModel'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Returns created customer ID
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new customer
+      tags:
+      - customers
+  /customer/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a customer from the system
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "404":
+          description: Customer not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a customer by ID
+      tags:
+      - customers
+    get:
+      consumes:
+      - application/json
+      description: Get a customer by its unique ID
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.CustomerResponseModel'
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "404":
+          description: Customer not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Get customer by ID
+      tags:
+      - customers
+    put:
+      consumes:
+      - application/json
+      description: Update a customer with the given ID
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Customer data to update
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/types.UpdateCustomerRequestModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.CustomerResponseModel'
+        "400":
+          description: Invalid ID format or request body
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "404":
+          description: Customer not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Update an existing customer
+      tags:
+      - customers
+  /customer/email/{email}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a customer by their email address. Used for login verification
+        or profile retrieval.
+      parameters:
+      - description: Customer Email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tesodev-korpes_CustomerService_internal_types.CustomerResponseModel'
+        "400":
+          description: Invalid email format
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "404":
+          description: Customer not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Get customer by email
+      tags:
+      - customers
+  /customer/list:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a paginated list of customers
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns list of customers
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: List customers with pagination
+      tags:
+      - customers
+  /customer/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with email and password, return access token
+        and user info.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/types.LoginRequestModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns access token and customer info
+          schema:
+            $ref: '#/definitions/types.LoginResponse'
+        "400":
+          description: Invalid request payload
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "401":
+          description: Unauthorized, invalid credentials
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "422":
+          description: Validation error on input data
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      summary: User login
+      tags:
+      - authentication
+  /customer/verify:
+    get:
+      consumes:
+      - application/json
+      description: Verify the authentication token and return user details if valid.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns user info on successful authentication
+          schema:
+            $ref: '#/definitions/types.VerifyTokenResponse'
+        "401":
+          description: Unauthorized or invalid token
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Verify user authentication
+      tags:
+      - authentication
+  /order/{id}/deliver:
+    put:
+      consumes:
+      - application/json
+      description: Changes the order status to DELIVERED if current status is SHIPPED
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order delivered successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "409":
+          description: Invalid order state for delivery
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Deliver an order
+      tags:
+      - orders
+  /orders:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a paginated list of all orders.
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns list of orders with pagination
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: No orders found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      summary: List all orders with pagination
+      tags:
+      - orders
+    post:
+      consumes:
+      - application/json
+      description: Create a new order with the given data
+      parameters:
+      - description: Order to create
+        in: body
+        name: order
+        required: true
+        schema:
+          $ref: '#/definitions/types.CreateOrderRequestModel'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Returns created order details
+          schema:
+            $ref: '#/definitions/types.OrderResponseModel'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      summary: Create a new order
+      tags:
+      - orders
+  /orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Marks the order as deleted without removing it permanently.
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Deletion success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "409":
+          description: Conflict error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      summary: Soft delete an order by ID
+      tags:
+      - orders
+    get:
+      consumes:
+      - application/json
+      description: Retrieve an order with customer details by its unique ID
+      parameters:
+      - description: Order ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Order details with customer info
+          schema:
+            $ref: '#/definitions/types.OrderWithCustomerResponse'
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      summary: Get order by ID
+      tags:
+      - orders
+  /orders/{id}/cancel:
+    put:
+      consumes:
+      - application/json
+      description: Cancel an order by its ID.
+      parameters:
+      - description: Order ID (UUID)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid ID format
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "404":
+          description: Order not found
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      summary: Cancel an order
+      tags:
+      - orders
+  /orders/{id}/ship:
+    put:
+      consumes:
+      - application/json
+      description: Mark an order as shipped by its ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errorPackage.AppError'
+      summary: Ship an order
+      tags:
+      - orders
+swagger: "2.0"
