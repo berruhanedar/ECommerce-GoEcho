@@ -62,11 +62,11 @@ func (h *Handler) Create(c echo.Context) error {
 		return customError.NewBadRequest(customError.InvalidOrderBody)
 	}
 
-	token := c.Request().Header.Get("Authorization") // ← kullanıcının JWT’si
+	token := c.Request().Header.Get("Authorization")
 
 	order := FromCreateOrderRequest(&req)
 
-	createdID, err := h.service.Create(c.Request().Context(), order, token) // ← token eklendi
+	createdID, err := h.service.Create(c.Request().Context(), order, token)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return customError.NewNotFound(customError.CustomerNotFound)

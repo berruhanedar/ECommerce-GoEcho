@@ -55,13 +55,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid request body",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -104,19 +104,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid email format",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "404": {
                         "description": "Customer not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -166,7 +166,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -206,25 +206,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid request payload",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized, invalid credentials",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "422": {
                         "description": "Validation error on input data",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -258,13 +258,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized or invalid token",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -307,19 +307,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid ID format",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "404": {
                         "description": "Customer not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -369,19 +369,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid ID format or request body",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "404": {
                         "description": "Customer not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -419,19 +419,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid ID format",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "404": {
                         "description": "Customer not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -477,25 +477,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid ID format",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "404": {
                         "description": "Order not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "409": {
                         "description": "Invalid order state for delivery",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -541,13 +541,13 @@ const docTemplate = `{
                     "404": {
                         "description": "No orders found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -585,13 +585,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid request body",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -629,19 +629,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid ID format",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "404": {
                         "description": "Order not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -680,19 +680,19 @@ const docTemplate = `{
                     "404": {
                         "description": "Order not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "409": {
                         "description": "Conflict error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -733,19 +733,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Invalid ID format",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "404": {
                         "description": "Order not found",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -786,7 +786,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/errorPackage.AppError"
+                            "$ref": "#/definitions/customError.AppError"
                         }
                     }
                 }
@@ -794,11 +794,11 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "errorPackage.AppError": {
+        "customError.AppError": {
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "message": {
                     "type": "string"
@@ -808,16 +808,16 @@ const docTemplate = `{
         "tesodev-korpes_CustomerService_internal_types.Address": {
             "type": "object",
             "properties": {
-                "city": {
+                "address_id": {
                     "type": "string"
                 },
-                "id": {
+                "city": {
                     "type": "string"
                 },
                 "state": {
                     "type": "string"
                 },
-                "zipCode": {
+                "zip_code": {
                     "type": "string"
                 }
             }
@@ -855,8 +855,8 @@ const docTemplate = `{
                         "$ref": "#/definitions/tesodev-korpes_CustomerService_internal_types.Phone"
                     }
                 },
-                "role": {
-                    "type": "string"
+                "system": {
+                    "$ref": "#/definitions/types.Role"
                 },
                 "updated_at": {
                     "type": "string"
@@ -866,10 +866,10 @@ const docTemplate = `{
         "tesodev-korpes_CustomerService_internal_types.Phone": {
             "type": "object",
             "properties": {
-                "id": {
+                "phone_id": {
                     "type": "string"
                 },
-                "phoneNumber": {
+                "phone_number": {
                     "type": "integer"
                 }
             }
@@ -945,7 +945,8 @@ const docTemplate = `{
                 "first_name",
                 "last_name",
                 "password",
-                "phone"
+                "phone",
+                "role"
             ],
             "properties": {
                 "address": {
@@ -975,6 +976,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/tesodev-korpes_CustomerService_internal_types.Phone"
                     }
+                },
+                "role": {
+                    "$ref": "#/definitions/types.Role"
                 }
             }
         },
@@ -993,6 +997,12 @@ const docTemplate = `{
                 "customer_id": {
                     "type": "string"
                 },
+                "discounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Discount"
+                    }
+                },
                 "items": {
                     "type": "array",
                     "items": {
@@ -1001,6 +1011,32 @@ const docTemplate = `{
                 },
                 "shipping_address": {
                     "$ref": "#/definitions/tesodev-korpes_OrderService_internal_types.Address"
+                }
+            }
+        },
+        "types.Discount": {
+            "type": "object",
+            "properties": {
+                "discountCode": {
+                    "type": "string"
+                },
+                "endDate": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "startDate": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "number"
                 }
             }
         },
@@ -1062,6 +1098,12 @@ const docTemplate = `{
                 "customer_id": {
                     "type": "string"
                 },
+                "discounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Discount"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },
@@ -1103,6 +1145,12 @@ const docTemplate = `{
                 "customer_id": {
                     "type": "string"
                 },
+                "discounts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/types.Discount"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },
@@ -1125,6 +1173,17 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.Role": {
+            "type": "object",
+            "properties": {
+                "membership": {
+                    "type": "string"
+                },
+                "systemRole": {
                     "type": "string"
                 }
             }
@@ -1165,6 +1224,9 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/tesodev-korpes_CustomerService_internal_types.Phone"
                     }
+                },
+                "role": {
+                    "$ref": "#/definitions/types.Role"
                 }
             }
         },
