@@ -35,15 +35,15 @@ func NewHandler(e *echo.Echo, service *Service, mongoClient *mongo.Client) {
 	e.Use(middleware.Authentication(mongoClient, pkg.Skipper))
 
 	g := e.Group("/customer")
-	g.POST("/create", handler.Create)
 	g.POST("/login", handler.Login)
+	g.GET("/verify", handler.VerifyAuthentication)
 
+	g.POST("/create", handler.Create)
 	g.GET("/:id", handler.GetByID)
 	g.GET("/email/:email", handler.GetByEmail, middleware.AuthorizationMiddleware(allowedRole_premium))
+	g.GET("/list", handler.GetListCustomer)
 	g.PUT("/:id", handler.Update)
 	g.DELETE("/:id", handler.Delete)
-	g.GET("/list", handler.GetListCustomer)
-	g.GET("/verify", handler.VerifyAuthentication)
 }
 
 // Login godoc
@@ -112,68 +112,6 @@ func (h *Handler) VerifyAuthentication(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// GetByEmail godoc
-// @Summary Get customer by email
-// @Description Retrieve a customer by their email address. Used for login verification or profile retrieval.
-// @Tags customers
-// @Accept json
-// @Produce json
-// @Security ApiKeyAuth
-// @Param email path string true "Customer Email"
-// @Success 200 {object} types.CustomerResponseModel
-// @Failure 400 {object} customError.AppError "Invalid email format"
-// @Failure 404 {object} customError.AppError "Customer not found"
-// @Failure 500 {object} customError.AppError "Internal server error"
-// @Router /customer/email/{email} [get]
-func (h *Handler) GetByEmail(c echo.Context) error {
-	correlationID, _ := c.Get("CorrelationID").(string)
-	email := c.Param("email")
-
-	customer, err := h.service.GetByEmail(c.Request().Context(), email)
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return customError.NewNotFound(customError.CustomerNotFound)
-		}
-		customError.LogErrorWithCorrelation(err, correlationID)
-		return customError.NewInternal(customError.CustomerServiceError, err)
-	}
-
-	customError.LogInfoWithCorrelation("Customer found", correlationID)
-	return c.JSON(http.StatusOK, customer)
-}
-
-// GetByID godoc
-// @Summary Get customer by ID
-// @Description Get a customer by its unique ID
-// @Tags customers
-// @Accept json
-// @Produce json
-// @Security ApiKeyAuth
-// @Param id path string true "Customer ID"
-// @Success 200 {object} types.CustomerResponseModel
-// @Failure 400 {object} customError.AppError "Invalid ID format"
-// @Failure 404 {object} customError.AppError "Customer not found"
-// @Failure 500 {object} customError.AppError "Internal server error"
-// @Router /customer/{id} [get]
-func (h *Handler) GetByID(c echo.Context) error {
-	correlationID, _ := c.Get("CorrelationID").(string)
-	id := c.Param("id")
-	if !pkg.IsValidUUID(id) {
-		return customError.NewBadRequest(customError.InvalidCustomerID)
-	}
-
-	customer, err := h.service.GetByID(c.Request().Context(), id)
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return customError.NewNotFound(customError.CustomerNotFound)
-		}
-		customError.LogErrorWithCorrelation(err, correlationID)
-		return customError.NewInternal(customError.CustomerServiceError, err)
-	}
-	customError.LogInfoWithCorrelation("Customer found", correlationID)
-	return c.JSON(http.StatusOK, customer)
-}
-
 // Create godoc
 // @Summary Create a new customer
 // @Description Create a new customer with the given data
@@ -212,6 +150,109 @@ func (h *Handler) Create(c echo.Context) error {
 		"message":   "Succeeded!",
 		"createdId": createdID,
 	})
+}
+
+// GetByID godoc
+// @Summary Get customer by ID
+// @Description Get a customer by its unique ID
+// @Tags customers
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param id path string true "Customer ID"
+// @Success 200 {object} types.CustomerResponseModel
+// @Failure 400 {object} customError.AppError "Invalid ID format"
+// @Failure 404 {object} customError.AppError "Customer not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
+// @Router /customer/{id} [get]
+func (h *Handler) GetByID(c echo.Context) error {
+	correlationID, _ := c.Get("CorrelationID").(string)
+	id := c.Param("id")
+	if !pkg.IsValidUUID(id) {
+		return customError.NewBadRequest(customError.InvalidCustomerID)
+	}
+
+	customer, err := h.service.GetByID(c.Request().Context(), id)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return customError.NewNotFound(customError.CustomerNotFound)
+		}
+		customError.LogErrorWithCorrelation(err, correlationID)
+		return customError.NewInternal(customError.CustomerServiceError, err)
+	}
+	customError.LogInfoWithCorrelation("Customer found", correlationID)
+	return c.JSON(http.StatusOK, customer)
+}
+
+// GetByEmail godoc
+// @Summary Get customer by email
+// @Description Retrieve a customer by their email address. Used for login verification or profile retrieval.
+// @Tags customers
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param email path string true "Customer Email"
+// @Success 200 {object} types.CustomerResponseModel
+// @Failure 400 {object} customError.AppError "Invalid email format"
+// @Failure 404 {object} customError.AppError "Customer not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
+// @Router /customer/email/{email} [get]
+func (h *Handler) GetByEmail(c echo.Context) error {
+	correlationID, _ := c.Get("CorrelationID").(string)
+	email := c.Param("email")
+
+	customer, err := h.service.GetByEmail(c.Request().Context(), email)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return customError.NewNotFound(customError.CustomerNotFound)
+		}
+		customError.LogErrorWithCorrelation(err, correlationID)
+		return customError.NewInternal(customError.CustomerServiceError, err)
+	}
+
+	customError.LogInfoWithCorrelation("Customer found", correlationID)
+	return c.JSON(http.StatusOK, customer)
+}
+
+// GetListCustomer godoc
+// @Summary List customers with pagination
+// @Description Retrieve a paginated list of customers
+// @Tags customers
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param page query int false "Page number" default(1)
+// @Param limit query int false "Number of items per page"
+// @Success 200 {object} map[string]interface{} "Returns list of customers"
+// @Failure 500 {object} customError.AppError "Internal server error"
+// @Router /customer/list [get]
+func (h *Handler) GetListCustomer(c echo.Context) error {
+	params := types.Pagination{
+		Limit: 10,
+		Page:  1,
+	}
+
+	if p := c.QueryParam("page"); p != "" {
+		if pageInt, err := strconv.Atoi(p); err == nil && pageInt > 0 {
+			params.Page = pageInt
+		}
+	}
+
+	if l := c.QueryParam("limit"); l != "" {
+		if limitInt, err := strconv.Atoi(l); err == nil && limitInt > 0 {
+			params.Limit = limitInt
+		}
+	}
+
+	customers, err := h.service.Get(c.Request().Context(), params)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return c.JSON(http.StatusOK, map[string]interface{}{"data": []types.CustomerResponseModel{}})
+		}
+		return customError.NewInternal(customError.CustomerServiceError, err)
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{"data": customers})
 }
 
 // Update godoc
@@ -282,45 +323,4 @@ func (h *Handler) Delete(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusNoContent)
-}
-
-// GetListCustomer godoc
-// @Summary List customers with pagination
-// @Description Retrieve a paginated list of customers
-// @Tags customers
-// @Accept json
-// @Produce json
-// @Security ApiKeyAuth
-// @Param page query int false "Page number" default(1)
-// @Param limit query int false "Number of items per page"
-// @Success 200 {object} map[string]interface{} "Returns list of customers"
-// @Failure 500 {object} customError.AppError "Internal server error"
-// @Router /customer/list [get]
-func (h *Handler) GetListCustomer(c echo.Context) error {
-	params := types.Pagination{
-		Limit: 10,
-		Page:  1,
-	}
-
-	if p := c.QueryParam("page"); p != "" {
-		if pageInt, err := strconv.Atoi(p); err == nil && pageInt > 0 {
-			params.Page = pageInt
-		}
-	}
-
-	if l := c.QueryParam("limit"); l != "" {
-		if limitInt, err := strconv.Atoi(l); err == nil && limitInt > 0 {
-			params.Limit = limitInt
-		}
-	}
-
-	customers, err := h.service.Get(c.Request().Context(), params)
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return c.JSON(http.StatusOK, map[string]interface{}{"data": []types.CustomerResponseModel{}})
-		}
-		return customError.NewInternal(customError.CustomerServiceError, err)
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{"data": customers})
 }

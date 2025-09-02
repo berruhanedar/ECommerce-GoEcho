@@ -21,6 +21,15 @@ func NewRepository(col *mongo.Collection) *Repository {
 	}
 }
 
+func (r *Repository) Create(ctx context.Context, customer *types.Customer) (string, error) {
+
+	_, err := r.collection.InsertOne(ctx, customer)
+	if err != nil {
+		return "", err
+	}
+	return customer.Id, nil
+}
+
 func (r *Repository) GetByID(ctx context.Context, id string) (*types.Customer, error) {
 	var customer types.Customer
 	filter := bson.M{"_id": id}
@@ -44,13 +53,23 @@ func (r *Repository) GetByEmail(ctx context.Context, email string) (*types.Custo
 	return &customer, nil
 }
 
-func (r *Repository) Create(ctx context.Context, customer *types.Customer) (string, error) {
+func (r *Repository) Get(ctx context.Context, opt *options.FindOptions) ([]types.Customer, error) {
+	var customers []types.Customer
 
-	_, err := r.collection.InsertOne(ctx, customer)
+	cursor, err := r.collection.Find(ctx, bson.M{}, opt)
 	if err != nil {
-		return "", err
+		if err == mongo.ErrNoDocuments {
+			return nil, fmt.Errorf("document not found")
+		}
+		return nil, err
 	}
-	return customer.Id, nil
+	defer cursor.Close(ctx)
+
+	if err = cursor.All(ctx, &customers); err != nil {
+		return nil, err
+	}
+
+	return customers, nil
 }
 
 func (r *Repository) Update(ctx context.Context, id string, customer *types.Customer) error {
@@ -81,23 +100,4 @@ func (r *Repository) Delete(ctx context.Context, id string) error {
 		return mongo.ErrNoDocuments
 	}
 	return nil
-}
-
-func (r *Repository) Get(ctx context.Context, opt *options.FindOptions) ([]types.Customer, error) {
-	var customers []types.Customer
-
-	cursor, err := r.collection.Find(ctx, bson.M{}, opt)
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return nil, fmt.Errorf("document not found")
-		}
-		return nil, err
-	}
-	defer cursor.Close(ctx)
-
-	if err = cursor.All(ctx, &customers); err != nil {
-		return nil, err
-	}
-
-	return customers, nil
 }
