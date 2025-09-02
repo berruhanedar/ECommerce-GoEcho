@@ -169,7 +169,7 @@ const (
 	InvalidCustomerBody ErrorKey = "InvalidCustomerBody"
 	EmptyCustomerID     ErrorKey = "EmptyCustomerID"
 	EmptyOrderID        ErrorKey = "EmptyOrderID"
-	EmptyRole           ErrorKey = "EmptyROle"
+	EmptyRole           ErrorKey = "EmptyRole"
 	InvalidOrderID      ErrorKey = "InvalidOrderID"
 	InvalidOrderBody    ErrorKey = "InvalidOrderBody"
 	UnknownBadRequest   ErrorKey = "UnknownBadRequest"

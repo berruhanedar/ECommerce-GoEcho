@@ -8,7 +8,7 @@ import (
 )
 
 func IsValidEmail(email string) bool {
-	email = strings.TrimSpace(email) // Baş ve sondaki boşlukları temizle
+	email = strings.TrimSpace(email)
 	re := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}(\.[a-zA-Z]{2,})?$`)
 	return re.MatchString(email)
 }

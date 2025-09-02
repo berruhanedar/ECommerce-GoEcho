@@ -33,6 +33,7 @@ func (c CreateCustomerRequestModel) CreateValidate() *customError.AppError {
 			return customError.NewUnprocessableEntity(customError.InvalidAddressFormat, nil)
 		}
 	}
+
 	for _, phone := range c.Phone {
 		if !validators.IsValidPhone(phone.PhoneNumber) {
 			return customError.NewUnprocessableEntity(customError.InvalidPhoneFormat, nil)
@@ -53,5 +54,4 @@ func (c LoginRequestModel) LoginValidate() *customError.AppError {
 	}
 
 	return nil
-
 }

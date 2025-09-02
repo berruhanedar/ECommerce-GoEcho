@@ -14,7 +14,6 @@ type Client struct {
 	timeout time.Duration
 }
 
-// Artık New(baseURL, timeout) var
 func New(baseURL string, timeout time.Duration) *Client {
 	return &Client{
 		http:    &fasthttp.Client{},

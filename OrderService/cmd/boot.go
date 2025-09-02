@@ -26,7 +26,6 @@ func BootOrderService(clientMongo *mongo.Client, e *echo.Echo) {
 	service := internal.NewService(repo, cc)
 	handler := internal.NewHandler(e, service, clientMongo)
 
-
 	e.GET("/price/:id",
 		func(c echo.Context) error {
 			e.Router().Find(c.Request().Method, c.Path(), c)

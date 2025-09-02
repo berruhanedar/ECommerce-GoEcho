@@ -23,6 +23,7 @@ type OrderResponseModel struct {
 	Discounts       []*Discount `json:"discounts,omitempty"`
 	IsDelete        bool        `json:"is_delete"`
 }
+
 type CustomerResponseModel struct {
 	Id        string    `json:"id"`
 	FirstName string    `json:"first_name"`

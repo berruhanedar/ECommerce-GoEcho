@@ -21,7 +21,6 @@ import (
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
-
 type Handler struct {
 	service  *Service
 	validate *validator.Validate
@@ -315,7 +314,6 @@ func (h *Handler) GetAllOrders(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{"data": orders})
-
 }
 
 func (h *Handler) GetPremiumOrderPrice(c echo.Context) error {

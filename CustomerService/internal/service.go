@@ -21,6 +21,7 @@ func NewService(repo *Repository) *Service {
 		repo: repo,
 	}
 }
+
 func (s *Service) Login(ctx context.Context, email, password, correlationID string) (string, *types.Customer, error) {
 	customer, err := s.repo.GetByEmail(ctx, email)
 	if err != nil {
@@ -48,6 +49,7 @@ func (s *Service) Login(ctx context.Context, email, password, correlationID stri
 
 	return token, customer, nil
 }
+
 func (s *Service) GetByEmail(ctx context.Context, email string) (*types.Customer, error) {
 	customer, err := s.repo.GetByEmail(ctx, email)
 	if err != nil {
@@ -95,6 +97,7 @@ func (s *Service) Update(ctx context.Context, id string, customer *types.Custome
 	}
 	return s.repo.Update(ctx, id, customer)
 }
+
 func (s *Service) Delete(ctx context.Context, id string) error {
 
 	_, err := s.repo.GetByID(ctx, id)

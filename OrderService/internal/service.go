@@ -1,4 +1,3 @@
-// File: internal/service.go
 package internal
 
 import (
@@ -8,8 +7,8 @@ import (
 
 	"tesodev-korpes/OrderService/config"
 	"tesodev-korpes/OrderService/internal/types"
-	"tesodev-korpes/pkg/client"      // <- fastHTTP wrapper (baseURL + path)
-	"tesodev-korpes/pkg/customError" // <- daha anlamlı hata mesajları için
+	"tesodev-korpes/pkg/client"
+	"tesodev-korpes/pkg/customError"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -135,7 +134,6 @@ func (s *Service) GetAllOrders(ctx context.Context, pagination types.Pagination)
 	return response, nil
 }
 
-
 func (s *Service) fetchCustomerByID(customerID, token string) (*types.CustomerResponseModel, error) {
 	if customerID == "" {
 		return nil, errors.New("customerID empty")
@@ -145,7 +143,7 @@ func (s *Service) fetchCustomerByID(customerID, token string) (*types.CustomerRe
 		"Content-Type": "application/json",
 	}
 	if token != "" {
-		headers["Authorization"] = token 
+		headers["Authorization"] = token
 	}
 
 	var customer types.CustomerResponseModel

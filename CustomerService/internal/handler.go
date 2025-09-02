@@ -21,16 +21,13 @@ import (
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
-
 type Handler struct {
 	service *Service
-	// validate *validate
 }
 
 func NewHandler(e *echo.Echo, service *Service, mongoClient *mongo.Client) {
 	handler := &Handler{
 		service: service,
-		// validate: &validate{},
 	}
 
 	allowedRole_premium := []string{"admin", "manager", "user"}
@@ -194,21 +191,18 @@ func (h *Handler) Create(c echo.Context) error {
 	fmt.Println("create handler custom")
 
 	if err := c.Bind(&req); err != nil {
-		fmt.Printf("Bind error: %v\n", err) // hangi alan patlamış görürsün
+		fmt.Printf("Bind error: %v\n", err)
 		return customError.NewBadRequest(customError.InvalidCustomerBody)
 	}
-	
-	if err := req.CreateValidate(); err != nil {
-		return err}
 
+	if err := req.CreateValidate(); err != nil {
+		return err
+	}
 
 	if req.Role.SystemRole == "" {
 		req.Role.SystemRole = "non-premium"
 	}
 
-	
-
-	// service.Create ham (raw) error döndürür. Tanımadığımız için Internal olarak sarmalıyoruz.
 	createdID, err := h.service.Create(c.Request().Context(), &req)
 	if err != nil {
 		return customError.NewInternal(customError.CustomerServiceError, err)
@@ -322,8 +316,6 @@ func (h *Handler) GetListCustomer(c echo.Context) error {
 
 	customers, err := h.service.Get(c.Request().Context(), params)
 	if err != nil {
-		// Listelemede kayıt bulunamaması bir hata değildir, boş liste dönülür.
-		// Ancak yine de mongo.ErrNoDocuments gelirse diye kontrol ediyoruz.
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return c.JSON(http.StatusOK, map[string]interface{}{"data": []types.CustomerResponseModel{}})
 		}
