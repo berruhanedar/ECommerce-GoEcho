@@ -2,14 +2,13 @@ package middleware
 
 import (
 	"context"
+	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"strings"
 	"tesodev-korpes/pkg/auth"
 	"tesodev-korpes/pkg/customError"
 	"time"
-
-	"github.com/labstack/echo/v4"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type SkipperFunc func(c echo.Context) bool
@@ -38,7 +37,8 @@ func Authentication(mongoClient *mongo.Client, skipper SkipperFunc) echo.Middlew
 			if err != nil {
 				return customError.NewUnauthorized(customError.MissingAuthToken)
 			}
-			c.Set("userRole", role)
+			c.Set("userID", claims.ID)
+			c.Set("role", role)
 			return next(c)
 		}
 	}
