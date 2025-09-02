@@ -53,8 +53,8 @@ func NewHandler(e *echo.Echo, service *Service, clientMongo *mongo.Client) *Hand
 // @Produce json
 // @Param order body types.CreateOrderRequestModel true "Order to create"
 // @Success 201 {object} types.OrderResponseModel "Returns created order details"
-// @Failure 400 {object} errorPackage.AppError "Invalid request body"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid request body"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /orders [post]
 func (h *Handler) Create(c echo.Context) error {
 	var req types.CreateOrderRequestModel
@@ -115,9 +115,9 @@ func (h *Handler) GetByID(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Order ID (UUID)"
 // @Success 200 {object} types.OrderWithCustomerResponse "Order details with customer info"
-// @Failure 400 {object} errorPackage.AppError "Invalid ID format"
-// @Failure 404 {object} errorPackage.AppError "Order not found"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid ID format"
+// @Failure 404 {object} customError.AppError "Order not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /orders/{id} [get]
 
 // ShipOrder godoc
@@ -128,7 +128,7 @@ func (h *Handler) GetByID(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Order ID"
 // @Success 200 {object} map[string]string "Success message"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /orders/{id}/ship [put]
 func (h *Handler) ShipOrder(c echo.Context) error {
 	id := c.Param("id")
@@ -163,10 +163,10 @@ func (h *Handler) ShipOrder(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Order ID"
 // @Success 200 {object} map[string]string "Order delivered successfully"
-// @Failure 400 {object} errorPackage.AppError "Invalid ID format"
-// @Failure 404 {object} errorPackage.AppError "Order not found"
-// @Failure 409 {object} errorPackage.AppError "Invalid order state for delivery"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid ID format"
+// @Failure 404 {object} customError.AppError "Order not found"
+// @Failure 409 {object} customError.AppError "Invalid order state for delivery"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Security ApiKeyAuth
 // @Router /order/{id}/deliver [put]
 func (h *Handler) DeliverOrder(c echo.Context) error {
@@ -203,9 +203,9 @@ func (h *Handler) DeliverOrder(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Order ID (UUID)"
 // @Success 200 {object} map[string]string "Success message"
-// @Failure 400 {object} errorPackage.AppError "Invalid ID format"
-// @Failure 404 {object} errorPackage.AppError "Order not found"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid ID format"
+// @Failure 404 {object} customError.AppError "Order not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /orders/{id}/cancel [put]
 func (h *Handler) CancelOrder(c echo.Context) error {
 	correlationID, _ := c.Get("CorrelationID").(string)
@@ -243,9 +243,9 @@ func (h *Handler) CancelOrder(c echo.Context) error {
 // @Produce json
 // @Param id path string true "Order ID"
 // @Success 200 {object} map[string]string "Deletion success message"
-// @Failure 404 {object} errorPackage.AppError "Order not found"
-// @Failure 409 {object} errorPackage.AppError "Conflict error"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 404 {object} customError.AppError "Order not found"
+// @Failure 409 {object} customError.AppError "Conflict error"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /orders/{id} [delete]
 func (h *Handler) DeleteOrder(c echo.Context) error {
 	correlationID, _ := c.Get("CorrelationID").(string)
@@ -284,8 +284,8 @@ func (h *Handler) DeleteOrder(c echo.Context) error {
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Number of items per page" default(10)
 // @Success 200 {object} map[string]interface{} "Returns list of orders with pagination"
-// @Failure 404 {object} errorPackage.AppError "No orders found"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 404 {object} customError.AppError "No orders found"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /orders [get]
 func (h *Handler) GetAllOrders(c echo.Context) error {
 	params := types.Pagination{

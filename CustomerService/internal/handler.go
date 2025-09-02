@@ -54,10 +54,10 @@ func NewHandler(e *echo.Echo, service *Service, mongoClient *mongo.Client) {
 // @Produce json
 // @Param loginRequest body types.LoginRequestModel true "Login credentials"
 // @Success 200 {object} types.LoginResponse "Returns access token and customer info"
-// @Failure 400 {object} errorPackage.AppError "Invalid request payload"
-// @Failure 401 {object} errorPackage.AppError "Unauthorized, invalid credentials"
-// @Failure 422 {object} errorPackage.AppError "Validation error on input data"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid request payload"
+// @Failure 401 {object} customError.AppError "Unauthorized, invalid credentials"
+// @Failure 422 {object} customError.AppError "Validation error on input data"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/login [post]
 func (h *Handler) Login(c echo.Context) error {
 	correlationID, _ := c.Get("CorrelationID").(string)
@@ -88,8 +88,8 @@ func (h *Handler) Login(c echo.Context) error {
 // @Produce json
 // @Security ApiKeyAuth
 // @Success 200 {object} types.VerifyTokenResponse "Returns user info on successful authentication"
-// @Failure 401 {object} errorPackage.AppError "Unauthorized or invalid token"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 401 {object} customError.AppError "Unauthorized or invalid token"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/verify [get]
 func (h *Handler) VerifyAuthentication(c echo.Context) error {
 	correlationID, _ := c.Get("CorrelationID").(string)
@@ -121,9 +121,9 @@ func (h *Handler) VerifyAuthentication(c echo.Context) error {
 // @Security ApiKeyAuth
 // @Param email path string true "Customer Email"
 // @Success 200 {object} types.CustomerResponseModel
-// @Failure 400 {object} errorPackage.AppError "Invalid email format"
-// @Failure 404 {object} errorPackage.AppError "Customer not found"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid email format"
+// @Failure 404 {object} customError.AppError "Customer not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/email/{email} [get]
 func (h *Handler) GetByEmail(c echo.Context) error {
 	correlationID, _ := c.Get("CorrelationID").(string)
@@ -151,9 +151,9 @@ func (h *Handler) GetByEmail(c echo.Context) error {
 // @Security ApiKeyAuth
 // @Param id path string true "Customer ID"
 // @Success 200 {object} types.CustomerResponseModel
-// @Failure 400 {object} errorPackage.AppError "Invalid ID format"
-// @Failure 404 {object} errorPackage.AppError "Customer not found"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid ID format"
+// @Failure 404 {object} customError.AppError "Customer not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/{id} [get]
 func (h *Handler) GetByID(c echo.Context) error {
 	correlationID, _ := c.Get("CorrelationID").(string)
@@ -183,8 +183,8 @@ func (h *Handler) GetByID(c echo.Context) error {
 // @Security ApiKeyAuth
 // @Param customer body types.CreateCustomerRequestModel true "Customer to create"
 // @Success 201 {object} map[string]interface{} "Returns created customer ID"
-// @Failure 400 {object} errorPackage.AppError "Invalid request body"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid request body"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/ [post]
 func (h *Handler) Create(c echo.Context) error {
 	var req types.CreateCustomerRequestModel
@@ -224,9 +224,9 @@ func (h *Handler) Create(c echo.Context) error {
 // @Param id path string true "Customer ID"
 // @Param customer body types.UpdateCustomerRequestModel true "Customer data to update"
 // @Success 200 {object} types.CustomerResponseModel
-// @Failure 400 {object} errorPackage.AppError "Invalid ID format or request body"
-// @Failure 404 {object} errorPackage.AppError "Customer not found"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid ID format or request body"
+// @Failure 404 {object} customError.AppError "Customer not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/{id} [put]
 func (h *Handler) Update(c echo.Context) error {
 	id := c.Param("id")
@@ -264,9 +264,9 @@ func (h *Handler) Update(c echo.Context) error {
 // @Security ApiKeyAuth
 // @Param id path string true "Customer ID"
 // @Success 204 "No Content"
-// @Failure 400 {object} errorPackage.AppError "Invalid ID format"
-// @Failure 404 {object} errorPackage.AppError "Customer not found"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 400 {object} customError.AppError "Invalid ID format"
+// @Failure 404 {object} customError.AppError "Customer not found"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/{id} [delete]
 func (h *Handler) Delete(c echo.Context) error {
 	id := c.Param("id")
@@ -294,7 +294,7 @@ func (h *Handler) Delete(c echo.Context) error {
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Number of items per page"
 // @Success 200 {object} map[string]interface{} "Returns list of customers"
-// @Failure 500 {object} errorPackage.AppError "Internal server error"
+// @Failure 500 {object} customError.AppError "Internal server error"
 // @Router /customer/list [get]
 func (h *Handler) GetListCustomer(c echo.Context) error {
 	params := types.Pagination{
