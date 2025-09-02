@@ -1,11 +1,13 @@
 package config
 
+type DbConfig struct {
+	DBName  string
+	ColName string
+}
+
 type OrderConfig struct {
 	Port     string
-	DbConfig struct {
-		DBName  string
-		ColName string
-	}
+	DbConfig DbConfig
 }
 
 var OrderStatus = struct {
@@ -20,43 +22,24 @@ var OrderStatus = struct {
 	Canceled:  "CANCELED",
 }
 
-var cfgs = map[string]OrderConfig{
-	"prod": {
-		Port: ":8002",
-		DbConfig: struct {
-			DBName  string
-			ColName string
-		}{
-			DBName:  "tesodev",
-			ColName: "order",
-		},
-	},
-	"qa": {
-		Port: ":8002",
-		DbConfig: struct {
-			DBName  string
-			ColName string
-		}{
-			DBName:  "tesodev",
-			ColName: "order",
-		},
-	},
-	"dev": {
-		Port: ":8002",
-		DbConfig: struct {
-			DBName  string
-			ColName string
-		}{
-			DBName:  "tesodev",
-			ColName: "order",
-		},
+var commonConfig = OrderConfig{
+	Port: ":8002",
+	DbConfig: DbConfig{
+		DBName:  "tesodev",
+		ColName: "order",
 	},
 }
 
+var cfgs = map[string]OrderConfig{
+	"prod": commonConfig,
+	"qa":   commonConfig,
+	"dev":  commonConfig,
+}
+
 func GetOrderConfig(env string) *OrderConfig {
-	config, isExist := cfgs[env]
-	if !isExist {
+	cfg, exists := cfgs[env]
+	if !exists {
 		panic("config does not exist")
 	}
-	return &config
+	return &cfg
 }
