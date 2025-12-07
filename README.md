@@ -1,5 +1,15 @@
 # ECommerce-GoEcho Project
 
+<!-- BADGES -->
+![Go](https://img.shields.io/badge/Go-1.22+-00ADD8?logo=go&logoColor=white)
+![Echo](https://img.shields.io/badge/Echo-Framework-4BAA73?logo=go&logoColor=white)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-blue?logo=jsonwebtokens&logoColor=white)
+![Swagger](https://img.shields.io/badge/Docs-Swagger-85EA2D?logo=swagger&logoColor=black)
+![REST API](https://img.shields.io/badge/Architecture-REST--API-orange)
+![Status](https://img.shields.io/badge/Status-Active-success)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
 I have developed a robust and feature-rich REST API for an e-commerce platform using **Go** and the **Echo framework**, designed to handle all essential CRUD operations efficiently and securely. The API incorporates JWT-based authentication, hash-based password encryption, and middleware for secure request handling, ensuring a smooth and reliable experience for managing customers, orders, and products.
 
 ---
